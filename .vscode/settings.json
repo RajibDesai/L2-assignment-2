@@ -1,0 +1,15 @@
+{
+  // সেভ করার সাথে সাথে ফরম্যাট চালু
+  "editor.formatOnSave": true,
+
+  // লিন্টিংয়ের সময় ESLint ব্যবহার করে অটো ফিক্স (সঠিক টাইপ ব্যবহার করে)
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  // লাইনের শেষে লাইন ব্রেক ফরম্যাট নির্ধারণ
+  "files.eol": "\n",
+
+  // ESLint যেসব ফাইল টাইপ লিন্ট করবে
+  "eslint.validate": ["typescript", "javascript"]
+}
