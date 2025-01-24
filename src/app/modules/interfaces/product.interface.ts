@@ -7,3 +7,8 @@ export interface IProduct {
   quantity: number;
   inStock: boolean;
 }
+
+// Query টাইপ সংজ্ঞায়িত
+export interface ProductQuery {
+  searchTerm?: string; // Optional, সার্চের জন্য
+}

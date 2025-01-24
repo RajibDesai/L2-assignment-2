@@ -1,22 +1,21 @@
 import express, { Application, Request, Response } from 'express';
-import productRoutes from '../src/app/modules/routes/product.route.js';
-import orderRoutes from '../src/app/modules/routes/order.route.js';
-import { errorHandler } from './app/modules/middlewares/error.middleware.js';
-const app: Application = express();
 import cors from 'cors';
+import productRouter from './app/modules/routes/product.route';
+import orderRouter from './app/modules/routes/order.route';
+import { errorHandler } from './app/modules/middlewares/error.middleware';
 
-// persar
+const app: Application = express();
 app.use(express.json());
 app.use(cors());
 
-// Routes
-app.use('/api/products', productRoutes);
-app.use('/api/orders', orderRoutes);
+app.use('/api/products', productRouter);
+app.use('/api/orders', orderRouter);
 
-app.get('/', (_req: Request, res: Response) => {
-  res.send('Welcome to the API!');
-});
-
+// Error Handling Middleware
 app.use(errorHandler);
+
+app.get('/', (req: Request, res: Response) => {
+  res.send('Welcome to the Bike Store API!');
+});
 
 export default app;

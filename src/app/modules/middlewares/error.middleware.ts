@@ -1,16 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
 
 export const errorHandler = (
-  err: unknown,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  err: any,
   req: Request,
   res: Response,
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-  _next: NextFunction
-): void => {
-  const statusCode = (err as { status?: number }).status || 500;
-  res.status(statusCode).json({
-    message: (err as { message?: string }).message || 'Internal Server Error',
+  next: NextFunction
+) => {
+  console.error('Error Middleware:', err);
+
+  // Default error status and message
+  const status = err.status || 500;
+  const message = err.message || 'Internal Server Error';
+
+  res.status(status).json({
     success: false,
-    stack: (err as { stack?: string }).stack,
+    message,
   });
 };

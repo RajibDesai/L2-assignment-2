@@ -1,36 +1,116 @@
-import { Request, Response } from 'express';
-import { Product } from '../models/product.model.js';
-import { productValidationSchema } from '../Validations/product.validation.js';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Request, Response, NextFunction } from 'express';
+import * as ProductService from '../services/product.service';
+import { ProductQuery } from '../interfaces/product.interface';
 
-export const createProduct = async (req: Request, res: Response) => {
+export const createProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const validatedData = productValidationSchema.parse(req.body);
-    const product = new Product(validatedData);
-    const savedProduct = await product.save();
-
+    const product = await ProductService.createProduct(req.body);
     res.status(201).json({
-      message: 'Bike created successfully',
+      message: 'Product created successfully',
       success: true,
-      data: savedProduct,
+      data: product,
     });
-  } catch (error) {
-    res
-      .status(400)
-      .json({ message: 'Failed to create bike', success: false, error });
+  } catch (error: any) {
+    next({
+      status: 400,
+      message: error.message || 'Failed to create product',
+    });
   }
 };
 
-export const getAllProducts = async (_req: Request, res: Response) => {
+export const getAllProducts = async (
+  req: Request<object, object, object, ProductQuery>, // Query টাইপ ব্যবহার
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const products = await Product.find();
+    const products = await ProductService.getAllProducts(req.query);
     res.status(200).json({
-      message: 'Bikes retrieved successfully',
+      message: 'Products retrieved successfully',
       success: true,
       data: products,
     });
-  } catch (error) {
+  } catch (error: any) {
+    next({
+      status: 400,
+      message: error.message || 'Failed to create product',
+    });
+  }
+};
+
+export const getProductById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const product = await ProductService.getProductById(req.params.productId);
+    if (!product) {
+      res.status(404).json({ message: 'Product not found', success: false });
+    }
+    res.status(200).json({
+      message: 'Bike retrieved successfully',
+      success: true,
+      data: product,
+    });
+  } catch (error: any) {
+    next({
+      status: 400,
+      message: error.message || 'Failed to create product',
+    });
+  }
+};
+
+export const updateProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const updatedProduct = await ProductService.updateProduct(
+      req.params.productId,
+      req.body
+    );
+    if (!updatedProduct) {
+      res.status(404).json({ message: 'Product not found', success: false });
+    }
+    res.status(200).json({
+      message: 'Product updated successfully',
+      success: true,
+      data: updatedProduct,
+    });
+  } catch (error: any) {
+    next({
+      status: 400,
+      message: error.message || 'Failed to create product',
+    });
+  }
+};
+
+export const deleteProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const deletedProduct = await ProductService.deleteProduct(
+      req.params.productId
+    );
+    if (!deletedProduct) {
+      res.status(404).json({ message: 'Product not found', success: false });
+    }
     res
-      .status(500)
-      .json({ message: 'Failed to retrieve bikes', success: false, error });
+      .status(200)
+      .json({ message: 'Product deleted successfully', success: true });
+  } catch (error: any) {
+    next({
+      status: 400,
+      message: error.message || 'Failed to create product',
+    });
   }
 };

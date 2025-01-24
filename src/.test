@@ -1,0 +1,36 @@
+bike-store/
+├── src/
+│   ├── app.ts
+│   ├── server.ts
+│   ├── app/
+│       ├── config/
+│       │   └── index.ts
+│       ├── modules/
+│           ├── interfaces/
+│           │   ├── product.interface.ts
+│           │   ├── order.interface.ts
+│           ├── models/
+│           │   ├── product.model.ts
+│           │   ├── order.model.ts
+│           ├── validations/
+│           │   ├── product.validation.ts
+│           │   ├── order.validation.ts
+│           ├── servises/
+│           │   ├── product.servise.ts
+│           │   ├── order.servise.ts
+│           ├── controllers/
+│           │   ├── product.controller.ts
+│           │   ├── order.controller.ts
+│           ├── routes/
+│           │   ├── product.route.ts
+│           │   ├── order.route.ts
+│           ├── middlewares/
+│           │   └── error.middleware.ts
+├── package.json
+├── tsconfig.json
+├── .env
+├── README.md
+
+Express Request টাইপের সাধারণ গঠন
+Request এর ডিফল্ট সিগনেচার:
+Request<ParamsDictionary, ResBody, ReqBody, ReqQuery, Locals>        

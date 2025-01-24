@@ -1,18 +1,34 @@
 import { Schema, model } from 'mongoose';
-import { IOrder } from '../interfaces/order.interface.js';
+import { IOrder } from '../interfaces/order.interface';
 
-const OrderSchema = new Schema<IOrder>(
+const orderSchema = new Schema<IOrder>(
   {
-    email: { type: String, required: true },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      validate: {
+        validator: (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), // Basic email validation
+        message: 'Invalid email format',
+      },
+    },
     product: {
-      type: Schema.Types.ObjectId,
-      ref: 'Product', // বাইকের প্রোডাক্ট রেফারেন্স
+      type: Schema.Types.ObjectId, // Refers to the Product Model
+      ref: 'Product',
       required: true,
     },
-    quantity: { type: Number, required: true, min: 1 },
-    totalPrice: { type: Number, required: true, min: 0 },
+    quantity: {
+      type: Number,
+      required: true,
+      min: [1, 'Quantity must be at least 1'], // Minimum quantity validation
+    },
+    totalPrice: {
+      type: Number,
+      required: true,
+      min: [0, 'Total price must be positive'], // Positive price validation
+    },
   },
-  { timestamps: true }
+  { timestamps: true } // Automatically adds createdAt and updatedAt
 );
 
-export const Order = model<IOrder>('Order', OrderSchema);
+export const Order = model<IOrder>('Order', orderSchema);

@@ -1,10 +1,9 @@
-import express from 'express';
-import { createOrder } from '../controllers/order.controller.js';
-import { calculateRevenue } from '../controllers/order.controller.js';
+import { Router } from 'express';
+import * as OrderController from '../controllers/order.controller';
 
-const router = express.Router();
+const router = Router();
 
-router.post('/', createOrder);
-router.get('/revenue', calculateRevenue);
+router.post('/', OrderController.createOrder);
+router.get('/revenue', OrderController.calculateRevenue);
 
 export default router;
