@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from 'express';
+import mongoose from 'mongoose';
 import * as ProductService from '../services/product.service';
 import { ProductQuery } from '../interfaces/product.interface';
+import {
+  productValidationSchema,
+  updateProductValidationSchema,
+} from '../Validations/product.validation';
 
 export const createProduct = async (
   req: Request,
@@ -9,37 +14,34 @@ export const createProduct = async (
   next: NextFunction
 ) => {
   try {
-    const product = await ProductService.createProduct(req.body);
+    const validatedData = productValidationSchema.parse(req.body); // Zod Validation
+    // ভ্যালিড ডেটা দিয়ে প্রোডাক্ট তৈরি করা
+    const product = await ProductService.createProduct(validatedData); // যদি ভ্যালিডেশন সফল হয়, পরবর্তী মিডলওয়্যারে যায়
+
     res.status(201).json({
-      message: 'Product created successfully',
+      message: 'Bike created successfully',
       success: true,
       data: product,
     });
-  } catch (error: any) {
-    next({
-      status: 400,
-      message: error.message || 'Failed to create product',
-    });
+  } catch (error) {
+    next(error); // যদি ব্যর্থ হয়, Error Middleware-এ পাঠাবে
   }
 };
 
 export const getAllProducts = async (
-  req: Request<object, object, object, ProductQuery>, // Query টাইপ ব্যবহার
+  req: Request<object, object, object, ProductQuery>, // Use Query Type
   res: Response,
   next: NextFunction
 ) => {
   try {
     const products = await ProductService.getAllProducts(req.query);
     res.status(200).json({
-      message: 'Products retrieved successfully',
+      message: 'Bikes retrieved successfully',
       success: true,
       data: products,
     });
-  } catch (error: any) {
-    next({
-      status: 400,
-      message: error.message || 'Failed to create product',
-    });
+  } catch (error) {
+    next(error); // Pass error to the middleware
   }
 };
 
@@ -49,20 +51,26 @@ export const getProductById = async (
   next: NextFunction
 ) => {
   try {
-    const product = await ProductService.getProductById(req.params.productId);
+    const { productId } = req.params;
+    // ObjectI যাচাই করা
+    if (!mongoose.isValidObjectId(productId)) {
+      res.status(400).json({
+        message: 'Invalid Bike ID',
+        success: false,
+      });
+    }
+
+    const product = await ProductService.getProductById(productId);
     if (!product) {
-      res.status(404).json({ message: 'Product not found', success: false });
+      res.status(404).json({ message: 'Bike not found', success: false });
     }
     res.status(200).json({
       message: 'Bike retrieved successfully',
       success: true,
       data: product,
     });
-  } catch (error: any) {
-    next({
-      status: 400,
-      message: error.message || 'Failed to create product',
-    });
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -72,9 +80,14 @@ export const updateProduct = async (
   next: NextFunction
 ) => {
   try {
+    const { productId } = req.params;
+    const updateProductData = req.body;
+    const validatedData =
+      updateProductValidationSchema.parse(updateProductData);
+
     const updatedProduct = await ProductService.updateProduct(
-      req.params.productId,
-      req.body
+      productId,
+      validatedData
     );
     if (!updatedProduct) {
       res.status(404).json({ message: 'Product not found', success: false });

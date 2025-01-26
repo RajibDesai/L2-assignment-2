@@ -9,3 +9,5 @@ export const productValidationSchema = z.object({
   quantity: z.number().min(0, 'Quantity must be a positive number'),
   inStock: z.boolean(),
 });
+
+export const updateProductValidationSchema = productValidationSchema.partial();

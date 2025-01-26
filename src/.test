@@ -33,4 +33,231 @@ bike-store/
 
 Express Request টাইপের সাধারণ গঠন
 Request এর ডিফল্ট সিগনেচার:
-Request<ParamsDictionary, ResBody, ReqBody, ReqQuery, Locals>        
+Request<ParamsDictionary, ResBody, ReqBody, ReqQuery, Locals>     
+............................................................................................
+error.middleware.ts file
+
+// 1. Not Found Handler
+export const notFoundHandler = (req: Request, res: Response, next: NextFunction) => {
+  res.status(404).json({
+    success: false,
+    message: `Cannot GET ${req.originalUrl}`,
+  });
+};
+
+// 2. Error Handler
+export const errorHandler = (
+  err: any,
+  req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
+  console.error('Error Middleware:', err);
+
+  // Handle Zod Validation Errors
+  if (err instanceof ZodError) {
+    const errors = err.errors.reduce((acc: any, curr: any) => {
+      const path = curr.path.join('.');
+      acc[path] = {
+        message: curr.message,
+        name: 'ValidatorError',
+        properties: {
+          type: curr.code,
+        },
+      };
+      return acc;
+    }, {});
+
+    // CustomError দিয়ে নতুন ত্রুটি তৈরি করা
+    const customError = new CustomError('Validation failed', 400, errors);
+    console.log('customError.stack', customError.stack);
+    return res.status(customError.status).json({
+      message: customError.message,
+      success: false,
+      error: {
+        name: customError.name,
+        errors: customError.errors,
+      },
+      stack:
+        process.env.NODE_ENV === 'development' ? customError.stack : undefined,
+    });
+  }
+  // Generic error fallback / Handle Other Errors
+  const customError = new CustomError(
+    err.message || 'Internal Server Error',
+    err.status || 500
+  );
+  console.log(customError.stack);
+  res.status(customError.status).json({
+    message: customError.message,
+    success: false,
+    stack:
+      process.env.NODE_ENV === 'development' ? customError.stack : undefined,
+  });
+};
+
+...............................................................................................
+
+
+// --------------------- Another Way More Detailed Approach with custom error -------------------------
+/* export const errorHandler = (
+  err: any,
+  req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
+  console.error('Error Middleware:', err);
+
+  // **Handle Zod Errors**
+  if (err instanceof ZodError) {
+    const errors = err.errors.reduce((acc: any, curr: any) => {
+      const path = curr.path.join('.');
+      acc[path] = {
+        message: curr.message,
+        name: 'ValidatorError',
+        properties: {
+          type: curr.code,
+          ...(curr.minimum !== undefined && { min: curr.minimum }),
+          ...(curr.options && { options: curr.options }),
+        },
+      };
+      return acc;
+    }, {});
+
+    // CustomError ব্যবহার করে ত্রুটি তৈরি
+    const customError = new CustomError('Validation failed', 400, errors);
+
+    return res.status(customError.status).json({
+      message: customError.message,
+      success: false,
+      error: {
+        name: customError.name,
+        errors: customError.errors,
+      },
+      stack:
+        process.env.NODE_ENV === 'development' ? customError.stack : undefined,
+    });
+  }
+
+  // **Handle Mongoose Validation Errors**
+  if (err.name === 'ValidationError') {
+    const errors = Object.keys(err.errors).reduce((acc: any, key: string) => {
+      const error = err.errors[key];
+      acc[key] = {
+        message: error.message,
+        name: 'ValidatorError',
+        properties: error.properties,
+      };
+      return acc;
+    }, {});
+
+    // CustomError ব্যবহার করে ত্রুটি তৈরি
+    const customError = new CustomError('Validation failed', 400, errors);
+
+    return res.status(customError.status).json({
+      message: customError.message,
+      success: false,
+      error: {
+        name: customError.name,
+        errors: customError.errors,
+      },
+      stack:
+        process.env.NODE_ENV === 'development' ? customError.stack : undefined,
+    });
+  }
+
+  // **Handle Other Errors (Generic Errors)**
+  const customError = new CustomError(
+    err.message || 'Internal Server Error',
+    err.status || 500
+  );
+
+  res.status(customError.status).json({
+    message: customError.message,
+    success: false,
+    stack:
+      process.env.NODE_ENV === 'development' ? customError.stack : undefined,
+  });
+}; */
+
+// ----------------------- Another Way only error.middleware.ts file ----------------------------------
+/*
+export const errorHandler = (
+  err: any,
+  req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
+  console.error('Error Middleware:', err);
+
+  // **Handle Zod Errors**
+  if (err instanceof ZodError) {
+    const errors = err.errors.reduce((acc: any, curr: any) => {
+      const path = curr.path.join('.');
+      acc[path] = {
+        message: curr.message,
+        name: 'ValidatorError',
+        properties: {
+          type: curr.code,
+          ...(curr.minimum !== undefined && { min: curr.minimum }),
+          ...(curr.options && { options: curr.options }),
+        },
+      };
+      return acc;
+    }, {});
+
+    return res.status(400).json({
+      message: 'Validation failed',
+      success: false,
+      error: {
+        name: 'ValidationError',
+        errors, // Processed error details
+      },
+      stack:
+        process.env.NODE_ENV === 'development' ? err.stack : undefined, // Stack trace only in development
+    });
+  }
+
+  // **Handle Mongoose Validation Errors**
+  if (err.name === 'ValidationError') {
+    const errors = Object.keys(err.errors).reduce((acc: any, key: string) => {
+      const error = err.errors[key];
+      acc[key] = {
+        message: error.message,
+        name: 'ValidatorError',
+        properties: error.properties,
+      };
+      return acc;
+    }, {});
+
+    return res.status(400).json({
+      message: 'Validation failed',
+      success: false,
+      error: {
+        name: 'ValidationError',
+        errors, // Processed error details
+      },
+      stack:
+        process.env.NODE_ENV === 'development' ? err.stack : undefined, // Stack trace only in development
+    });
+  }
+
+  // **Handle Other Errors**
+  res.status(err.status || 500).json({
+    message: err.message || 'Internal Server Error',
+    success: false,
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+  });
+}; */
+
+
+...............................................................................................
+
+           ID এর বৈধতা যাচাই করা
+ if (!mongoose.isValidObjectId(productID)) {
+      return res.status(400).json({
+        message: 'Invalid Bike ID',
+        success: false,
+      });
+    }
+................................................................................................
