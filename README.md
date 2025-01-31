@@ -33,10 +33,11 @@ A **RESTful API** built using **Express.js**, **TypeScript**, and **MongoDB**. T
 -  OR
 - yarn install
 
-  | Column 1 | Column 2 | Column 3 |
-|----------|----------|----------|
-| Row 1-1  | Row 1-2  | Row 1-3  |
-| Row 2-1  | Row 2-2  | Row 2-3  |
-| Row 3-1  | Row 3-2  | Row 3-3  |
+| Method	Endpoint	Description  |
+|----------|---------------|-------------------|
+|POST	       /api/products	  Create a new bike|
+| Row 2-1  | Row 2-2       |   Row 2-3         |
+| Row 3-1  | Row 3-2       |   Row 3-3         |
+
 
 
