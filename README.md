@@ -175,8 +175,4 @@ Edit
     "totalRevenue": 3600
   }
 }
-🎯 Future Enhancements
-🔹 User authentication with JWT
-🔹 Admin panel for managing products and orders
-🔹 Order history for customers
-🔹 Payment gateway integration
+
