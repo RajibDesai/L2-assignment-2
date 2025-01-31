@@ -1,4 +1,6 @@
-export interface IProduct {
+import { Document } from 'mongoose';
+
+export interface IProduct extends Document {
   name: string;
   brand: string;
   price: number;
@@ -10,5 +12,5 @@ export interface IProduct {
 
 // Query টাইপ সংজ্ঞায়িত
 export interface ProductQuery {
-  searchTerm?: string; // Optional, সার্চের জন্য
+  searchTerm?: string; // সার্চের জন্য
 }

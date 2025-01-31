@@ -1,4 +1,5 @@
-bike-store/
+/*
+ bike-store/
 ├── src/
 │   ├── app.ts
 │   ├── server.ts
@@ -29,16 +30,21 @@ bike-store/
 ├── package.json
 ├── tsconfig.json
 ├── .env
-├── README.md
+├── README.md 
 
-Express Request টাইপের সাধারণ গঠন
+ক্লায়েন্ট > রাউটার > কন্ট্রোলার > সার্ভিস > ডেটাবেস > সার্ভিস > কন্ট্রোলার > রেসপন্স।
+*/
+
+  
+
+/* Express Request টাইপের সাধারণ গঠন
 Request এর ডিফল্ট সিগনেচার:
-Request<ParamsDictionary, ResBody, ReqBody, ReqQuery, Locals>     
-............................................................................................
-error.middleware.ts file
+Request<ParamsDictionary, ResBody, ReqBody, ReqQuery, Locals>  */    
+// .........................................................................................
+// error.middleware.ts file
 
 // 1. Not Found Handler
-export const notFoundHandler = (req: Request, res: Response, next: NextFunction) => {
+/* export const notFoundHandler = (req: Request, res: Response, next: NextFunction) => {
   res.status(404).json({
     success: false,
     message: `Cannot GET ${req.originalUrl}`,
@@ -95,11 +101,11 @@ export const errorHandler = (
       process.env.NODE_ENV === 'development' ? customError.stack : undefined,
   });
 };
+ */
+// .........................................................................................
 
-...............................................................................................
 
-
-// --------------------- Another Way More Detailed Approach with custom error -------------------------
+// --------------------- Another Way More Detailed Approach with custom error -------------
 /* export const errorHandler = (
   err: any,
   req: Request,
@@ -180,7 +186,7 @@ export const errorHandler = (
   });
 }; */
 
-// ----------------------- Another Way only error.middleware.ts file ----------------------------------
+// ----------------------- Another Way only error.middleware.ts file -------------------
 /*
 export const errorHandler = (
   err: any,
@@ -251,13 +257,61 @@ export const errorHandler = (
 }; */
 
 
-...............................................................................................
-
+// ..............................................................................................
+/* 
            ID এর বৈধতা যাচাই করা
  if (!mongoose.isValidObjectId(productID)) {
       return res.status(400).json({
         message: 'Invalid Bike ID',
         success: false,
       });
-    }
-................................................................................................
+    } */
+// ..........................................................................................
+
+/* async function-এর মূল কাজ হলো ফাংশনের ভেতরের return value-কে Promise-এর resolve value হিসেবে রিটার্ন করা।
+সুতরাং, fetchSomeData JavaScript-এর Promise অবজেক্ট রিটার্ন করে।
+
+async function fetchData() {
+  return "Hello, World!";
+}
+
+const result = fetchData();
+console.log(result); // এটি একটি Promise দেখাবে।
+
+result.then((data) => console.log(data)); // "Hello, World!" দেখাবে।
+fetchData() কী?
+fetchData একটি async function।
+async কীওয়ার্ড থাকায়, এই ফাংশন স্বয়ংক্রিয়ভাবে একটি Promise রিটার্ন করে।
+ফাংশনের return স্টেটমেন্টে যা থাকে, সেটি Promise এর resolve value হয়।
+২. fetchData() কীভাবে কাজ করে?
+javascript
+Copy
+Edit
+const result = fetchData();
+এখানে fetchData() ফাংশন কল করা হয়েছে।
+যেহেতু এটি একটি async function, এটি Promise রিটার্ন করে।
+এই Promise resolve হলে তার ভ্যালু হবে "Hello, World!"।
+৩. console.log(result) কী দেখাবে?
+javascript
+Copy
+Edit
+console.log(result);
+এটি Promise পেন্ডিং স্টেট দেখাবে।
+কারণ, fetchData() ফাংশন কল করার সাথে সাথে এর মধ্যে থাকা return স্টেটমেন্ট রানের জন্য অপেক্ষা করে।
+তাই প্রথমে Promise { <pending> } দেখা যায়।
+৪. result.then() কীভাবে কাজ করে?
+javascript
+Copy
+Edit
+result.then((data) => console.log(data));
+এখানে .then() Promise এর resolve value অ্যাক্সেস করে।
+যেহেতু fetchData ফাংশন "Hello, World!" রিটার্ন করেছে, তাই .then() সেই ভ্যালু ("Hello, World!") অ্যাক্সেস করে এবং এটি console.log(data)-এ দেখায়।
+সংক্ষেপে কে কাকে কী রিটার্ন করে?
+fetchData() ফাংশন: এটি Promise রিটার্ন করে।
+result: এটি fetchData() ফাংশন থেকে রিটার্ন হওয়া Promise ধরে রাখে।
+result.then(): এটি Promise resolve হলে তার ভ্যালু ("Hello, World!") অ্যাক্সেস করে।
+কোড ফ্লো সহজ ভাষায়:
+fetchData() কল করলে একটি Promise রিটার্ন হয় (যা পেন্ডিং থাকে)।
+result সেই Promise ধরে রাখে।
+.then() ব্যবহার করে আমরা Promise resolve হলে ভ্যালু পাই ("Hello, World!")।
+*/                                   

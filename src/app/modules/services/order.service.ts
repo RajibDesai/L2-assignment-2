@@ -1,26 +1,56 @@
+import { IOrder } from '../interfaces/order.interface';
+import { IProduct } from '../interfaces/product.interface';
 import { Order } from '../models/order.model';
-import { Product } from '../models/product.model';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const createOrder = async (data: any) => {
-  const product = await Product.findById(data.product);
-  if (!product) throw new Error('Product not found');
+export const createOrder = async (
+  orderData: Partial<IOrder>, //  Partial<IOrder> ব্যবহার করুন
+  product: IProduct
+): Promise<IOrder> => {
+  // Check inventory availability
+  if (product.quantity < orderData.quantity!) {
+    throw new Error('Insufficient stock available');
+  }
 
-  if (product.quantity < data.quantity) throw new Error('Insufficient stock');
+  // Reduce product stock
+  product.quantity -= orderData.quantity!;
 
-  product.quantity -= data.quantity;
-  product.inStock = product.quantity > 0;
+  // Update inStock status if quantity is 0
+  if (product.quantity === 0) {
+    product.inStock = false;
+  }
+
+  // Save the updated product details
   await product.save();
 
-  return await Order.create(data);
+  // Calculate total price
+  const totalPrice = (orderData.quantity || 0) * product.price;
+
+  // Create the order
+  const order = await Order.create({
+    ...orderData,
+    totalPrice,
+  });
+
+  return order;
 };
 
-export const calculateRevenue = async () => {
+export const calculateRevenue = async (): Promise<number> => {
   const orders = await Order.aggregate([
+    {
+      $lookup: {
+        from: 'products', // Product collection এর সাথে যোগ
+        localField: 'product',
+        foreignField: '_id',
+        as: 'productDetails',
+      },
+    },
+    { $unwind: '$productDetails' }, // Array ফরম্যাট ঠিক করার জন্য
     {
       $group: {
         _id: null,
-        totalRevenue: { $sum: '$totalPrice' },
+        totalRevenue: {
+          $sum: { $multiply: ['$quantity', '$productDetails.price'] },
+        },
       },
     },
   ]);

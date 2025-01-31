@@ -1,7 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
-import { Order } from '../models/order.model.js';
+import { Request, Response, NextFunction } from 'express';
+import * as OrderService from '../services/order.service';
 import { Product } from '../models/product.model.js';
 import { orderValidationSchema } from '../Validations/order.validation.js';
+import mongoose from 'mongoose';
+import { IOrder } from '../interfaces/order.interface';
 
 export const createOrder = async (
   req: Request,
@@ -9,44 +11,76 @@ export const createOrder = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const validatedData = orderValidationSchema.parse(req.body);
-    const product = await Product.findById(validatedData.product);
+    const orderData = req.body;
+    console.log('orderdata', orderData);
 
-    if (!product) {
-      res.status(404).json({
-        message: 'Product not found',
-        success: false,
-      });
+    if (!orderData) {
+      res.status(400).json({ message: 'Order data is missing', status: false });
       return;
     }
 
-    // Order creation logic
-    const order = await Order.create(validatedData);
+    // Validate Order Data
+    const validatedData = orderValidationSchema.parse(orderData);
+
+    // Convert product ID to ObjectId
+    const productId = new mongoose.Types.ObjectId(validatedData.product);
+
+    // Fetch product from database
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      res.status(404).json({ message: 'Product not found', status: false });
+      return;
+    }
+
+    const orderDataWithObjectId: Partial<IOrder> = {
+      email: validatedData.email,
+      product: productId,
+      quantity: validatedData.quantity,
+      totalPrice: validatedData.quantity * product.price,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    // Call service layer with correct types
+    const order = await OrderService.createOrder(
+      orderDataWithObjectId,
+      product
+    );
 
     res.status(201).json({
       message: 'Order created successfully',
-      success: true,
-      data: order,
+      status: true,
+      data: {
+        _id: order._id,
+        email: order.email,
+        product: order.product,
+        quantity: order.quantity,
+        totalPrice: order.totalPrice,
+        createdAt: order.createdAt,
+        updatedAt: order.updatedAt,
+      },
     });
   } catch (error) {
-    next(error); // Pass the error to the error handling middleware
+    next(error);
   }
 };
 
-export const calculateRevenue = async (_req: Request, res: Response) => {
+export const calculateRevenue = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const revenue = await Order.aggregate([
-      { $group: { _id: null, totalRevenue: { $sum: '$totalPrice' } } },
-    ]);
+    // Call service layer
+    const totalRevenue = await OrderService.calculateRevenue();
 
     res.status(200).json({
       message: 'Revenue calculated successfully',
-      success: true,
-      data: { totalRevenue: revenue[0]?.totalRevenue || 0 },
+      status: true,
+      data: { totalRevenue },
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: 'Failed to calculate revenue', success: false, error });
+    next(error);
   }
 };

@@ -8,7 +8,7 @@ const orderSchema = new Schema<IOrder>(
       required: true,
       trim: true,
       validate: {
-        validator: (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), // Basic email validation
+        validator: (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
         message: 'Invalid email format',
       },
     },
@@ -20,15 +20,15 @@ const orderSchema = new Schema<IOrder>(
     quantity: {
       type: Number,
       required: true,
-      min: [1, 'Quantity must be at least 1'], // Minimum quantity validation
+      min: [1, 'Quantity must be at least 1'],
     },
     totalPrice: {
       type: Number,
       required: true,
-      min: [0, 'Total price must be positive'], // Positive price validation
+      min: [0, 'Total price must be positive'],
     },
   },
-  { timestamps: true } // Automatically adds createdAt and updatedAt
+  { timestamps: true }
 );
 
 export const Order = model<IOrder>('Order', orderSchema);

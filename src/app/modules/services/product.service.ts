@@ -3,14 +3,15 @@ import { Product } from '../models/product.model';
 import { IProduct, ProductQuery } from '../interfaces/product.interface';
 
 // Create a product
-export const createProduct = async (productData: IProduct) => {
-  const product = await Product.create(productData);
+export const createProduct = async (productData: Omit<IProduct, 'save'>) => {
+  const product = new Product(productData);
+  await product.save();
   return product;
 };
 
 // Get all products
 export const getAllProducts = async (query: ProductQuery) => {
-  const searchTerm = query.searchTerm; // Optional field
+  const searchTerm = query.searchTerm;
   const filter: any = {};
 
   if (searchTerm) {
@@ -25,8 +26,8 @@ export const getAllProducts = async (query: ProductQuery) => {
 };
 
 // Get product by ID
-export const getProductById = async (productId: string) => {
-  return Product.findById(productId);
+export const getProductById = async (bikeId: string) => {
+  return Product.findById(bikeId);
 };
 
 // Update a product
