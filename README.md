@@ -27,9 +27,7 @@ A **RESTful API** built using **Express.js**, **TypeScript**, and **MongoDB**. T
 git clone  https://github.com/RajibDesai/L2Assignment-1.git
 cd L2Assignment-1
 
----
-### 3️⃣ **Install Dependencies**
-
-npm install
-# OR
-yarn install
+### 2️⃣ **Clone the Repository**  
+```sh
+git clone  https://github.com/RajibDesai/L2Assignment-1.git
+cd L2Assignment-1
