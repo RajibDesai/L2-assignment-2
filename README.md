@@ -23,21 +23,85 @@ A **RESTful API** built using **Express.js**, **TypeScript**, and **MongoDB**. T
 - npm or yarn  
 
 ### 2️⃣ **Clone the Repository**  
+```sh
+git clone  https://github.com/RajibDesai/L2Assignment-1.git
+cd L2Assignment-2
+```
+### 3️⃣ **Install Dependencies**
 
-- git clone  `https://github.com/RajibDesai/L2Assignment-1.git`
-- cd `L2Assignment-1`
+npm install 
+#### OR
+yarn install
 
-### 3️⃣ **Install Dependencies**  
 
-- npm install
--  OR
-- yarn install
+### 4️⃣ Environment Variables
+Create a .env file and add the following information:
 
-| Method	Endpoint	Description  |
-|----------|---------------|-------------------|
-|POST	       /api/products	  Create a new bike|
-| Row 2-1  | Row 2-2       |   Row 2-3         |
-| Row 3-1  | Row 3-2       |   Row 3-3         |
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/bikestore
+If using MongoDB Atlas, change MONGO_URI accordingly.
+
+
+5️⃣ Run the Server
+
+npm run dev
+- OR
+yarn dev
+The server will run on http://localhost:5000.
+
+### 🗂 Project Structure
+```sh
+bike-store/
+├── src/
+│   ├── app.ts
+│   ├── server.ts
+│   ├── app/
+│       ├── config/
+│       │   └── index.ts
+│       ├── modules/
+│           ├── interfaces/
+│           │   ├── product.interface.ts
+│           │   ├── order.interface.ts
+│           ├── models/
+│           │   ├── product.model.ts
+│           │   ├── order.model.ts
+│           ├── validations/
+│           │   ├── product.validation.ts
+│           │   ├── order.validation.ts
+│           ├── services/
+│           │   ├── product.service.ts
+│           │   ├── order.service.ts
+│           ├── controllers/
+│           │   ├── product.controller.ts
+│           │   ├── order.controller.ts
+│           ├── routes/
+│           │   ├── product.route.ts
+│           │   ├── order.route.ts
+│           ├── middlewares/
+│           │   └── error.middleware.ts
+├── package.json
+├── tsconfig.json
+├── .env
+├── README.md
+```
+
+## 🚀 **API Endpoints**
+### 🏍️ Bike Routes
+
+| Method | Endpoint            | Description             |
+|--------|---------------------|-------------------------|
+| POST   | `/api/products`     | Create a new bike      |
+| GET    | `/api/products`     | Get all bikes          |
+| GET    | `/api/products/:id` | Get a specific bike by ID |
+| PUT    | `/api/products/:id` | Update a bike         |
+| DELETE | `/api/products/:id` | Delete a bike         |
+
+### 📦 Order Routes
+
+| Method| Endpoint    	        | Description          |
+|------| -----------------------|-------------------------|
+| POST | `/api/orders`	        | Place an order          |
+| GET	 |  `/api/orders/revenue`	| Calculate total revenue |
 
 
 
