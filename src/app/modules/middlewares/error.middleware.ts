@@ -21,7 +21,7 @@ export const errorHandler = (
   res: Response,
   _next: NextFunction
 ) => {
-  console.error('Error Middleware:', err);
+  // console.error('Error Middleware:', err);
 
   // 3. Zod Validation Errors হ্যান্ডল করা
   if (err instanceof ZodError) {
@@ -39,7 +39,7 @@ export const errorHandler = (
 
     // 4. CustomError দিয়ে একটি নতুন ত্রুটি তৈরি করা হয়।
     const customError = new CustomError('Validation failed', 400, errors);
-    console.log('customError.stack', customError.stack); // Stack trace কনসোলে দেখানো।
+    // console.log('customError.stack', customError.stack); // Stack trace কনসোলে দেখানো।
     return res.status(customError.status).json({
       message: customError.message, // error মেসেজ রেসপন্সে।
       success: false,
@@ -71,7 +71,7 @@ export const errorHandler = (
     err.message || 'Internal Server Error', // ডিফল্ট ত্রুটির মেসেজ।
     err.status || 500 // ডিফল্ট স্ট্যাটাস কোড।
   );
-  console.log(customError.stack); // Stack trace কনসোলে দেখানো।
+  // console.log(customError.stack); // Stack trace কনসোলে দেখানো।
   res.status(customError.status).json({
     message: customError.message, // রেসপন্সে ত্রুটির মেসেজ।
     success: false,

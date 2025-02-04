@@ -12,7 +12,6 @@ export const createOrder = async (
 ): Promise<void> => {
   try {
     const orderData = req.body;
-    console.log('orderdata', orderData);
 
     if (!orderData) {
       res.status(400).json({ message: 'Order data is missing', status: false });
