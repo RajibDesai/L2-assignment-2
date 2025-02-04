@@ -20,7 +20,7 @@ export const createOrder = async (
   }
 
   // Save the updated product details
-  // await product.save();
+  await product.save();
 
   // Calculate total price
   const totalPrice = (orderData.quantity || 0) * product.price;
