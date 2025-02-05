@@ -15,6 +15,10 @@ app.use(cors());
 app.use('/api/products', productRouter);
 app.use('/api/orders', orderRouter);
 
+app.get('/', (req: Request, res: Response) => {
+  res.send('Welcome to the Bike Store API!');
+});
+
 // Error Handling Middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   errorHandler(err, req, res, next);
@@ -22,9 +26,5 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
 // Catch-all handler for any routes that don't match
 app.use(notFoundHandler);
-
-app.get('/', (req: Request, res: Response) => {
-  res.send('Welcome to the Bike Store API!');
-});
 
 export default app;
