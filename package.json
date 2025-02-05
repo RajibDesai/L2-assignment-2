@@ -5,8 +5,8 @@
   "main": "dist/server.js",
   "scripts": {
     "start": "node ./dist/server.js",
-    "start:prod": "node ./dist/server.js",
-    "start:dev": "nodemon --watch src --exec tsx ./src/server.ts",
+    "prod": "node ./dist/server.js",
+    "dev": "nodemon --watch src --exec tsx ./src/server.ts",
     "build": "tsc",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
