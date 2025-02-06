@@ -4,9 +4,8 @@ import mongoose from 'mongoose';
 
 async function main() {
   try {
-    await mongoose.connect(config.database_url).then(() => {
-      console.log('Mongoose connected to MongoDB'); // Debugging স্টেটমেন্ট ব্যবহার;
-    });
+    await mongoose.connect(config.database_url);
+    console.log('Mongoose connected to MongoDB'); // Debugging স্টেটমেন্ট
 
     app.listen(config.port, () => {
       console.log(`Server is running on port ${config.port}`);
