@@ -1,6 +1,6 @@
-import { IOrder } from '../interfaces/order.interface';
-import { IProduct } from '../interfaces/product.interface';
-import { Order } from '../models/order.model';
+import { IOrder } from '../interfaces/order.interface.js';
+import { IProduct } from '../interfaces/product.interface.js';
+import { Order } from '../models/order.model.js';
 
 export const createOrder = async (
   orderData: Partial<IOrder>, //  Partial<IOrder> ব্যবহার করুন

@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { ZodError } from 'zod';
-import { CustomError } from './CustomError';
+import { CustomError } from './customError.js';
 import { Request, Response, NextFunction } from 'express';
 
 // 1. Not Found Handler: এই ফাংশনটি তখন ব্যবহার হয় যখন রিকোয়েস্ট করা রুট পাওয়া যায় না।

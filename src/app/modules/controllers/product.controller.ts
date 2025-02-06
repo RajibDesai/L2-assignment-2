@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
-import * as ProductService from '../services/product.service';
-import { IProduct, ProductQuery } from '../interfaces/product.interface';
+import * as ProductService from '../services/product.service.js';
+import { IProduct, ProductQuery } from '../interfaces/product.interface.js';
 import {
   productValidationSchema,
   updateProductValidationSchema,
-} from '../Validations/product.validation';
+} from '../Validations/product.validation.js';
 
 export const createProduct = async (
   req: Request,

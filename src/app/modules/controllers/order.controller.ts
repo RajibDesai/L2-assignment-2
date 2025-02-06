@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import * as OrderService from '../services/order.service';
+import mongoose from 'mongoose';
+import * as OrderService from '../services/order.service.js';
 import { Product } from '../models/product.model.js';
 import { orderValidationSchema } from '../Validations/order.validation.js';
-import mongoose from 'mongoose';
-import { IOrder } from '../interfaces/order.interface';
+import { IOrder } from '../interfaces/order.interface.js';
 
 export const createOrder = async (
   req: Request,

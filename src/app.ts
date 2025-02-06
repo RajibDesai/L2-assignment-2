@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import productRouter from './app/modules/routes/product.route';
-import orderRouter from './app/modules/routes/order.route';
+import productRouter from './app/modules/routes/product.route.js';
+import orderRouter from './app/modules/routes/order.route.js';
 import {
   errorHandler,
   notFoundHandler,
-} from './app/modules/middlewares/error.middleware';
+} from './app/modules/middlewares/error.middleware.js';
 
 const app: Application = express();
 app.use(express.json());

@@ -10,12 +10,8 @@
     "outDir": "./dist", // কম্পাইল হওয়া JavaScript ফাইল গুলো এখানে রাখা হবে
     "resolveJsonModule": true, // JSON ফাইল ইম্পোর্ট করার অনুমতি
     "strict": true, // টাইপ চেকিংয়ের জন্য কড়া বিধি প্রয়োগ
-    "skipDefaultLibCheck": true // ডিফল্ট লাইব্রেরি চেকিং বাদ দেওয়া
+    "skipDefaultLibCheck": true, // ডিফল্ট লাইব্রেরি চেকিং বাদ দেওয়া
   },
-  "include": [
-    "src/**/*.ts" // সোর্স কোড যেখানে থাকবে
-  ],
-  "exclude": [
-    "node_modules" // নোড মডিউল গুলো বাদ দেওয়া
-  ]
+  "include": ["src/**/*"],  // সব src ফাইল ইনক্লুড হবে
+  "exclude": ["node_modules", "dist"]
 }

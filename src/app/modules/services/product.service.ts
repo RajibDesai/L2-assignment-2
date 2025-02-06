@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Product } from '../models/product.model';
-import { IProduct, ProductQuery } from '../interfaces/product.interface';
+import { Product } from '../models/product.model.js';
+import { IProduct, ProductQuery } from '../interfaces/product.interface.js';
 
 // Create a product
 export const createProduct = async (productData: Omit<IProduct, 'save'>) => {
