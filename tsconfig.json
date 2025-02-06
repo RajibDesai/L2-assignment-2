@@ -11,6 +11,7 @@
     "resolveJsonModule": true, // JSON ফাইল ইম্পোর্ট করার অনুমতি
     "strict": true, // টাইপ চেকিংয়ের জন্য কড়া বিধি প্রয়োগ
     "skipDefaultLibCheck": true, // ডিফল্ট লাইব্রেরি চেকিং বাদ দেওয়া
+    "allowSyntheticDefaultImports": true // default ইমপোর্টের সুবিধা দেয়, যেখানে default এক্সপোর্ট নেই।
   },
   "include": ["src/**/*"],  // সব src ফাইল ইনক্লুড হবে
   "exclude": ["node_modules", "dist"]
