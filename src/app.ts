@@ -28,3 +28,12 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 app.use(notFoundHandler);
 
 export default app;
+
+/* 
+scripts": {
+    "start": "node ./dist/server.js",
+    "prod": "nodemon ./dist/server.js",
+    "dev": "nodemon --watch src --exec tsx ./src/server.ts",
+    "build": "tsc"
+}
+*/
